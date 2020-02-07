@@ -5,6 +5,7 @@ import List from '../views/users/List.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Profile from '../components/Profile.vue'
+import ProjectName from '../views/ProjectName.vue'
 
 
 
@@ -36,6 +37,13 @@ const routes = [{
         name: 'login',
         component: Login
     },
+    {
+        path: '/Projects/:id',
+        name: 'project-name',
+        component: ProjectName,
+        params: true
+    },
+
 ]
 
 const router = new VueRouter({

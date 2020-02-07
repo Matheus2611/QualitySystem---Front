@@ -1,31 +1,40 @@
 <template>
   <nav>
-    
     <!-- :mini-variant.sync="mini" -->
-    <v-navigation-drawer dark app temporary bottom  v-model="drawer">
+    <v-navigation-drawer   app temporary bottom v-model="drawer">
       <v-list-item>
-        <v-list-item-avatar>
-          <v-img src="/instasize_190915122357.png"></v-img>
-        </v-list-item-avatar>
-
-        <v-list-item-title>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                width="100%"
-                dark
-                depressed
-                small
-                v-on="on"
-                :to="{ name: 'profile' }"
+        <v-container grid-list-xl>
+          <v-layout row justify-space-between>
+            <v-col align="center" cols="12" md10>
+              <v-img width="120px" src="/logo-cplug-blue.png"></v-img>
+              <span class="text-center text-uppercase font-weight-bold"
+                >qualidade</span
               >
-                <span>{{username}}</span>
-              </v-btn>
-            </template>
-            <span>Meu Perfil</span>
-          </v-tooltip>
-        </v-list-item-title>
+            </v-col>
+            <v-list-item-title>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    outlined
+                    class="pa-3 mb-3"
+                    width="100%"
+                   
+                    depressed
+                    small
+                    v-on="on"
+                    :to="{ name: 'profile' }"
+                  >
+                    <span>{{ user.username }}</span>
+                  </v-btn>
+                </template>
+                <span>Meu Perfil</span>
+              </v-tooltip>
+            </v-list-item-title>
+          </v-layout>
+        </v-container>
       </v-list-item>
+
+      <v-divider></v-divider>
 
       <v-list dense>
         <v-list-item
@@ -43,57 +52,71 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+       
+     
       </v-list>
-      <template v-slot:append>
-        <div class="pa-2">
-          <v-btn small block @click="logout">Logout</v-btn>
-        </div>
-      </template>
+      <v-spacer></v-spacer>
+         <v-switch 
+        class="ml-10 pa-3" 
+        v-model="$vuetify.theme.dark" 
+        color="primary" 
+        inset 
+        label="Dark Mode"></v-switch>
     </v-navigation-drawer>
-  
-     <v-app-bar dark app>
+
+    <v-app-bar app>
       <v-app-bar-nav-icon class="grey--text" @click.stop="drawer = !drawer">
       </v-app-bar-nav-icon>
-     
-      <div>
-        <v-toolbar-title>
-          <span class="font-weight-light blue--text">SETOR DE QUALIDADE</span>
+
+    
+        <v-toolbar-title class="ma-3 ml-4">
+    
+            SETOR DE QUALIDADE
+         
         </v-toolbar-title>
-      </div>
-       <v-toolbar-title class="pa-3 mb-3">
-        <v-img width="80px" src="/logo-cplug-blue.png"></v-img>
-      </v-toolbar-title>
+      
+
       <v-spacer></v-spacer>
       <div class="text-center">
-        <v-menu offset-y>
+        <v-menu transition="slide-y-transition" offset-y>
           <template v-slot:activator="{ on }">
-            <v-btn outlined v-on="on" depressed>
-              <v-icon left>expand_more</v-icon>
+            <v-btn  text small v-on="on">
               <span>Menu</span>
+              <v-icon right>expand_more</v-icon>
             </v-btn>
           </template>
           <v-list>
-            <v-list-item> </v-list-item>
+            
+            <v-list-item @click="myProj">
+             
+              Notificações
+            </v-list-item>
+          <v-divider></v-divider>
+            <v-list-item @click="logout">
+              Logout
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
     </v-app-bar>
-    
   </nav>
 </template>
 
 <script>
 export default {
-      props: {
-    user: {
-      type: String,
-      required: true
-    }
+    props: {
+      attrs: {
+        type: Object,
+        default: () => ({}),
+      },
     },
-  data() {
-    return {
-      drawer: false,
-      'username': this.user,
+    data(){
+      return {
+           initialDark: this.$vuetify
+        ? this.$vuetify.theme.dark
+        : false,   
+        drawer: false,
+      user: JSON.parse(localStorage.getItem('user')),
       links: [
         {
           title: "Home",
@@ -112,18 +135,37 @@ export default {
           icon: "assignment_ind",
           route: "list",
           tooltip: "Listar Usuário"
-        }
+        },
+         {
+          title: "Meus Projetos",
+          icon: "insert_chart",
+          route: "MyProjects",
+          tooltip: "Meus Projetos"
+        },
       ],
+   
+      }
+    },
+     
+   beforeDestroy () {
+      if (!this.$vuetify) return
+
+      this.$vuetify.theme.dark = this.initialDark
+    },
+      
       // mini: true
-    };
-  },
+  
+
   methods: {
     goTo(name) {
       this.$router.push({ name });
     },
-    logout(){
-      this.$emit('logout')
-    }
+    logout() {
+      this.$emit("logout");
+    },
+    myProj(){
+      this.$router.push({name: "MyProjects"})
+    },
   }
 };
 </script>

@@ -1,9 +1,9 @@
 <template>
   <v-dialog v-model="dialog" width="350">
     <template v-slot:activator="{ on }">
-      <v-btn class="white--text  mt-3" small  color="primary" v-on="on">
-<v-icon left small>create</v-icon>
-<span>Editar Informações</span>
+      <v-btn  class="mt-3" small width="80%"  v-on="on">
+
+<span>Editar Dados</span>
       </v-btn>
     </template>
     <v-card>

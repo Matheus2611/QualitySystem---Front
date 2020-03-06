@@ -68,12 +68,6 @@
                 v-model="loggedUser.perfil"
                 readonly
               ></v-text-field>
-              <!-- 
-                <Popup
-                  :email="user.email"
-                  :username="user.username"
-                  @nameChange="changeName"
-                /> -->
             </v-col>
 
             <v-divider color="black"></v-divider>
@@ -221,9 +215,9 @@
 </template>
 
 <script>
-// import Popup from "./nameChangePopup";
+
 export default {
-  // components: { Popup },
+
   data() {
     return {
       loggedUser: JSON.parse(localStorage.getItem('loggedUser')),

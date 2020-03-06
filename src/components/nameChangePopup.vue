@@ -1,13 +1,13 @@
 <template>
   <v-dialog v-model="dialog" width="350">
     <template v-slot:activator="{ on }">
-      <v-btn  class="mt-3" small width="80%"  v-on="on">
+      <v-btn color="primary" class="mt-3" small width="80%"  v-on="on">
 
 <span>Editar Dados</span>
       </v-btn>
     </template>
     <v-card>
-      <v-card-title class="headline grey lighten-2" primary-title>
+      <v-card-title class="headline grey lighten-2 black--text" primary-title>
         Alterar Informações
       </v-card-title>
 

@@ -1,256 +1,241 @@
 <template>
   <v-container fluid>
-    <v-card max-width="100%" class="mx-auto mt-5">
-      <v-fade-transition leave-absolute>
-        <h1 class="pa-2 green--text">
-          PROJETOS: {{ this.$store.state.projects.length }}
-        </h1>
-      </v-fade-transition>
+    <h3 class="font-weight-black">
+      <v-icon left>assignment</v-icon>
+      <span>Home</span>
+    </h3>
 
-      <v-divider></v-divider>
+    <v-divider></v-divider>
+    <v-row>
+      <v-col cols="12" sm="12" md="12">
+        <v-card outlined="" :elevation="1" max-width="100%" class="mx-auto">
+          <v-row class="ma-2" align="center" justify="space-between">
+            <v-fade-transition leave-absolute>
+              <h1 class="pa-2 text-center primary--text font-weight-regular">
+                PROJETOS: {{ this.$store.state.projects.length }}
+              </h1>
+            </v-fade-transition>
+            <NewProject />
+          </v-row>
 
-      <v-row class="my-1" align="center">
-        <strong class="mx-4 info--text text--darken-3">
-          Faltando: {{ remainingProjects }}
-        </strong>
+          <v-divider color="black"></v-divider>
 
-        <v-divider vertical></v-divider>
+          <v-row align="center">
+            <v-divider vertical color="black"></v-divider>
+            <v-btn
+              color="warning"
+              :class="{ active: filter == 'Em Andamento' }"
+              @click="changeFilter('Em Andamento')"
+              text=""
+            >
+              <strong class="ma-2 warning--text font-weight-regular">
+                Em Andamento: {{ remainingProj }}
+              </strong>
+            </v-btn>
 
-        <strong class="mx-4 black--text">
-          Completados: {{ completedproj }}
-        </strong>
+            <v-divider vertical color="black"></v-divider>
 
-        <v-divider vertical></v-divider>
+            <v-btn
+              color="success"
+              :class="{ active: filter == 'Concluido' }"
+              @click="changeFilter('Concluido')"
+              text=""
+            >
+              <strong class="ma-2 success--text font-weight-regular">
+                Concluídos: {{ completedproj }}
+              </strong>
+            </v-btn>
 
-        <v-text-field
-          label="Filtro"
-          class="mt-6 ml-3"
-          v-model="currentFilterValue"
-          placeholder="BUSQUE PELO NOME DO ANALISTA"
-          color="primary"
-        ></v-text-field>
+            <v-divider vertical color="black"></v-divider>
 
-        <v-progress-circular
-          :value="progress"
-          class="mr-2 pa-3 mx-auto"
-        ></v-progress-circular>
-      </v-row>
+            <v-btn
+              color="error"
+              :class="{ active: filter == 'Recusado' }"
+              @click="changeFilter('Recusado')"
+              text=""
+            >
+              <strong class="ma-2 error--text font-weight-regular">
+                Recusados: {{ refusedProj }}
+              </strong>
+            </v-btn>
 
-      <v-divider class="mb-4"></v-divider>
-    </v-card>
-    <v-toolbar class="headline indigo darken-4">
-      <v-toolbar-title>
-        <h2 class="font-weight-bold black--text">PROJETOS</h2>
-      </v-toolbar-title>
+            <v-divider vertical color="black"></v-divider>
 
-      <v-spacer></v-spacer>
-
-      <NewProject @addProject="addProject" />
-    </v-toolbar>
-
-    <v-card outlined="">
-      <v-tabs grow>
-        <v-tab class="warning black--text">
-          <v-icon left>cached</v-icon>
-          EM ANDAMENTO
-        </v-tab>
-        <v-tab class="success black--text">
-          <v-icon left>done</v-icon>
-          CONCLUÍDO
-        </v-tab>
-
-        <v-tab-item>
-         
-          <v-flex
-            class="ma-6"
-           
-          
+            <v-spacer></v-spacer>
+          </v-row>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" sm="6" md="6">
+        <v-card>
+          <v-data-iterator
+            :search="search"
+            :items="projectsFiltered"
+            item-key="id"
+            :items-per-page="projectsFiltered.length"
+            hide-default-footer
           >
-       
-            <v-hover v-slot:default="{ hover }" open-delay="200">
-              <v-card  class="mx-auto" outlined="" width="40%" :elevation="hover ? 18 : 2">
-                <v-toolbar class="black" dense="" text>
-                  <!-- <v-btn
-                    class="mr-5"
-                    @click="removeProject(record.id)"
-                    small
-                    color="red"
-                  >
-                    <v-icon>
-                      clear
-                    </v-icon>
-                  </v-btn>
+            <template v-slot:header>
+              <v-toolbar flat="" class="mb-2">
+                <v-toolbar-title class="title font-weight-regular mt-3">
+                  Filtro: {{ filter }}
+                </v-toolbar-title>
 
-                  <v-divider color="white" vertical></v-divider> -->
+                <v-spacer></v-spacer>
+                <v-text-field
+                  class="pa-4"
+                  v-model="search"
+                  clearable
+                  hide-details
+                  append-icon="search"
+                  label="Procurar"
+                ></v-text-field>
+              </v-toolbar>
+              
+            </template>
 
-                  <v-toolbar-title>
-                    <router-link
-                      class="  ml-3 title primary--text font-weight-bold text-uppercase"
+            <template v-slot:default="{ items }">
+              <v-row class="pa-0">
+                <v-col
+                  v-for="item in items"
+                  :key="item.id"
+                  cols="12"
+                  sm="12"
+                  md="12"
+                >
+                  <v-hover v-slot:default="{ hover }">
+                    <v-card
                       :to="{
                         name: 'project-name',
-                        params: { id: record.id }
+                        params: { id: item.id }
                       }"
+                      width="700px"
+                      class="mx-auto"
+                      :elevation="hover ? 16 : 0"
                     >
-                      <h4 class="ma-4 mb-12">PROJETO: {{ record.title }}</h4>
-                    </router-link>
-                  </v-toolbar-title>
-                  <v-spacer></v-spacer>
+                      <v-toolbar flat="" dense="">
+                        <v-toolbar-title
+                          class="title font-weight-black text-uppercase primary--text mx-auto"
+                        >
+                          {{ item.title }}
+                        </v-toolbar-title>
+                      </v-toolbar>
+                      <v-divider></v-divider>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content class="font-weight-bold"
+                            >Descrição:</v-list-item-content
+                          >
+                          <v-list-item-content
+                            class="align-end font-weight-regular"
+                            >{{ item.description }}</v-list-item-content
+                          >
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content class="font-weight-bold"
+                            >Analistas:</v-list-item-content
+                          >
+                          <v-list-item-content
+                            class="align-end font-weight-regular"
+                            >Matheus, Ketlyn, Johnson,
+                            Ariel</v-list-item-content
+                          >
+                        </v-list-item>
+                        <v-divider></v-divider>
 
-                  <v-divider color="white" vertical></v-divider>
+                        <div class="d-flex">
+                          <h6 class="ml-1 mt-2 text-secondary">
+                            Criado Por: MATHEUS
+                          </h6>
+                          <h6 class="ml-1 mt-2  text-secondary">
+                            Em: {{ item.created_at }}
+                          </h6>
+                        </div>
+                      </v-list>
+                      <v-divider></v-divider>
+                    </v-card>
+                  </v-hover>
+                </v-col>
+              </v-row>
+              <v-divider color="black"></v-divider>
+            </template>
+          </v-data-iterator>
+        </v-card>
+      </v-col>
+      <v-divider class="ml-5" vertical=""></v-divider>
 
-                  <v-chip
-                  small=""
-                    v-if="record.completed == 'Em Andamento'"
-                    class="ml-2"
-                    color="warning"
-                  >
-                    {{ record.completed }}
-                  </v-chip>
-                  <v-chip v-else class="ml-2" color="success">
-                    {{ record.completed }}
-                  </v-chip>
-                </v-toolbar>
-
-                <!-- <v-layout row justify-space-between>
-                  <v-flex md12> -->
-                    <v-card-text>
-                        <v-text-field
-                           
-                            label="Descrição"
-                           
-                           v-model="record.description"
-                           readonly=""
-                        ></v-text-field>
-                      <!-- <v-textarea
-                        class="pa-2"
-                        auto-grow
-                        v-model="record.description"
-                        outlined
-                        readonly=""
-                        name="input-10-8"
-                        label="Descrição do Projeto"
-                      >
-                        {{ record.description }}
-                      </v-textarea> -->
-                    </v-card-text>
-                  <!-- </v-flex>
-                </v-layout> -->
-                <!-- <div class="pa-2"> -->
-                  <!-- <v-card class="grey darken-4">
-                    <v-card-title>
-                      FLUXOS:
-                    </v-card-title>
-
-                    <v-card-subtitle>
-                      <h4>Analista:</h4>
-                      <span>{{ record.analist }}</span>
-                    </v-card-subtitle>
-                  </v-card> -->
-                <!-- </div> -->
-              </v-card>
-            </v-hover>
-          </v-flex>
-        </v-tab-item>
-
-        <v-tab-item>
-          2
-        </v-tab-item>
-      </v-tabs>
-      <v-container class="text-center my-5 mt-10">
-        <div v-if="this.$store.state.projects == ''">
-          <h2>
-            <kbd>SEM NOVOS PROJETOS</kbd>
-          </h2>
-        </div>
-      </v-container>
-    </v-card>
+      <v-col class="mx-auto align-center" cols="12" md="5" sm="5">
+        <v-card max-height="100%" max-width="100%">
+          <v-toolbar flat>
+            <v-toolbar-title class=" font-weight-regular"
+              >Atividades Recentes</v-toolbar-title
+            >
+          </v-toolbar>
+          <v-card-title primary-title>
+            Aqui vai a lista de atividades recentes de todos os projetos
+          </v-card-title>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
 import NewProject from "../components/NewProject";
 export default {
-  // props: {
-  //   user: {
-  //     type: String,
-  //     required: true
-  //   }
-  // authentication: {
-  //   type: Boolean,
-  //   required: true
-  // }
-  // },
-
+  created() {
+    this.$store.dispatch("retrieveProjects");
+    console.log(this.projectsFiltered);
+    console.log(this.projects);
+  },
   components: {
     NewProject
   },
 
   data() {
     return {
-      currentFilterValue: "",
-      tab: null,
-      items: ["EM ANDAMENTO", "CONCLUÍDO"],
-      id: 2,
-      // name: this.user,
-      // auth: this.authentication,
-
-      show: false
+      search: "",
+      show: false,
+      items: [],
+      completed: false,
+      onGoing: true,
+      refused: false
     };
   },
   computed: {
+    filter() {
+      return this.$store.state.filter;
+    },
+    projectsFiltered() {
+      return this.$store.getters.projectsFiltered;
+    },
+    projects() {
+      return this.$store.state.projects;
+    },
     completedproj() {
-      return this.$store.state.projects.filter(
-        project => project.completed === "Concluído"
-      ).length;
+      return this.$store.getters.completedproj;
     },
-    progress() {
-      return (this.completedproj / this.$store.state.projects.length) * 100;
+    remainingProj() {
+      return this.$store.getters.remainingProj;
     },
-    remainingProjects() {
-      return this.$store.state.projects.length - this.completedproj;
-    },
-    filteredData() {
-      var self = this;
-
-      if (
-        this.currentFilterValue != undefined &&
-        this.currentFilterValue != ""
-      ) {
-        return this.$store.state.projects.filter(function(d) {
-          return (
-            d.title.indexOf(self.currentFilterValue) != -1,
-            d.analist.indexOf(self.currentFilterValue) != -1
-          );
-        });
-      } else {
-        return this.$store.state.projects;
-      }
-    },
-    completedProjects() {
-      return this.$store.state.projects.filter(project => {
-        return project.completed === "Concluído";
-      });
+    refusedProj() {
+      return this.$store.getters.refusedProj;
     }
   },
 
   methods: {
-    addProject(title, description, status, select) {
-      this.$store.commit("addProject", {
-        id: this.id,
-        title: title,
-        description: description,
-        completed: status,
-        analist: select
-      });
-      this.id++;
+    changeFilter(filter) {
+      this.$store.dispatch("updateFilter", filter);
     },
-    addObs() {
-      this.observacao = this.obs;
-      this.obs = "";
-      this.show = false;
+    Completed() {
+      (this.completed = true), (this.onGoing = false), (this.refused = false);
     },
-    removeProject(id) {
-      const index = this.$store.state.projects.findIndex(item => item.id == id);
-      this.$store.state.projects.splice(index, 1);
+    Refused() {
+      (this.completed = false), (this.onGoing = false), (this.refused = true);
+    },
+    OnGoing() {
+      (this.completed = false), (this.onGoing = true), (this.refused = false);
     }
   }
 };

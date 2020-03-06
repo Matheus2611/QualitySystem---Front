@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="350">
     <template v-slot:activator="{ on }">
-      <v-btn outlined dark class="blue darken-4 mt-3" small v-on="on">
+      <v-btn text class=" mt-3" small v-on="on">
         <span>Esqueceu a Senha</span>
       </v-btn>
     </template>

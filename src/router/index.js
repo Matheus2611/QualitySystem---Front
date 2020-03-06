@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Register from '../views/users/Register.vue'
-import List from '../views/users/List.vue'
-import Home from '../views/Home.vue'
-import Login from '../views/Login.vue'
+import Users from '../views/users/Users.vue'
 import Profile from '../components/Profile.vue'
 import ProjectName from '../views/ProjectName.vue'
+import Home from '../views/Home.vue'
+import Login from '../components/Auth/Login.vue'
+import Register from '../components/Auth/Register.vue'
+import Logout from '../components/Auth/Logout.vue'
 
 
 
@@ -13,35 +14,69 @@ Vue.use(VueRouter)
 
 
 const routes = [{
+        path: '/',
+        component: Home,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
         path: '/Home',
         name: 'home',
-        component: Home
-    },
-    {
-        path: '/Register',
-        name: 'register',
-        component: Register
-    },
-    {
-        path: '/List',
-        name: 'list',
-        component: List
+        component: Home,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/Profile',
         name: 'profile',
-        component: Profile
+        component: Profile,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/Login',
         name: 'login',
-        component: Login
+        component: Login,
+        meta: {
+            requiresVisitor: true
+        }
+    },
+    {
+        path: '/logout',
+        name: 'logout',
+        component: Logout,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: Register,
+        meta: {
+            requiresVisitor: true
+        }
     },
     {
         path: '/Projects/:id',
         name: 'project-name',
         component: ProjectName,
-        params: true
+        params: true,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/Users',
+        name: 'users',
+        component: Users,
+        meta: {
+            requiresAuth: true
+        }
+
     },
 
 ]

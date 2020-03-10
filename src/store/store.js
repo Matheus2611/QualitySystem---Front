@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
         token: localStorage.getItem('access_token') || null,
         filter: 'Em Andamento',
         projects: [],
+        userProjects: [],
         users: [],
         loggedUser: JSON.parse(localStorage.getItem('loggedUser')) || null
     },
@@ -53,7 +54,8 @@ export const store = new Vuex.Store({
                     title: project.title,
                     description: project.description,
                     completed: false,
-                    status: 'Em Andamento'
+                    status: 'Em Andamento',
+                    user_id: project.user_id
 
                 }
 
@@ -98,6 +100,9 @@ export const store = new Vuex.Store({
         },
         retrieveProjects(state, projects) {
             state.projects = projects
+        },
+        retrieveUserProject(state, userProject) {
+            state.userProjects = userProject
         },
         retrieveUsers(state, users) {
             state.users = users
@@ -150,7 +155,6 @@ export const store = new Vuex.Store({
             return new Promise((resolve, reject) => {
                 Axios.put('/updateAuthUserPassword', password)
                     .then(response => {
-                        console.log(response)
                         resolve(response)
 
                     })
@@ -243,12 +247,13 @@ export const store = new Vuex.Store({
             context.commit('updateFilter', filter)
         },
         addProject(context, project) {
-
+            console.log(project.user_id)
             Axios.post('/projects', {
                     title: project.title,
                     completed: false,
                     description: project.description,
-                    status: 'Em Andamento'
+                    status: 'Em Andamento',
+                    user_id: project.user_id
                 })
                 .then(response => {
                     context.commit('addProject', response.data)
@@ -286,6 +291,17 @@ export const store = new Vuex.Store({
             Axios.get('/projects')
                 .then(response => {
                     context.commit('retrieveProjects', response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        retrieveUserProject(context) {
+            Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+            Axios.get('/userProject')
+                .then(response => {
+                    console.log(response)
+                    context.commit('retrieveUserProject', response.data)
                 })
                 .catch(error => {
                     console.log(error)

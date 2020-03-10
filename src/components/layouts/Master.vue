@@ -3,18 +3,16 @@
     <div v-if="loggedIn == false"></div>
     <div v-else>
       <nav>
-        
-
         <v-app-bar class="primary" dense="" app="">
           <v-app-bar-nav-icon
             class="white--text"
             @click.stop="drawer = !drawer"
           >
           </v-app-bar-nav-icon>
-
+          <!-- 
           <v-toolbar-title>
             <v-img width="77px" src="/logo-cplug-blue.png"></v-img>
-          </v-toolbar-title>
+          </v-toolbar-title> -->
 
           <v-spacer></v-spacer>
           <div class="text-center">
@@ -28,75 +26,99 @@
               </template>
               <v-list>
                 <v-list-item :to="{ name: 'profile' }">
-                  Meu Perfil
+                        
+                  <v-list-item-title class="font-weight-regular">
+                    Meu Perfil
+                  </v-list-item-title>
+            <v-list-item-avatar>
+                    <v-icon>face</v-icon>
+                  </v-list-item-avatar>
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item :to="{ name: 'logout' }">
+                <v-list-item-title>
                   Logout
+                </v-list-item-title>
+                 <v-list-item-avatar>
+                    <v-icon>input</v-icon>
+                  </v-list-item-avatar>
                 </v-list-item>
               </v-list>
             </v-menu>
           </div>
         </v-app-bar>
-        <v-navigation-drawer  width="15%"  app temporary=""  bottom v-model="drawer">
-            <v-list-item>
-              <v-container grid-list-xl>
-                <v-layout row justify-space-between>
-                  <v-col align="center" cols="12" md10>
-                    <v-img width="120px" src="/logo-cplug-blue.png"></v-img>
-                    <span  class="font-weight-regular">QUALIDADE</span>
-                  </v-col>
-                </v-layout>
-              </v-container>
+        <v-navigation-drawer
+          width="15%"
+          app
+          temporary=""
+          bottom
+          v-model="drawer"
+        >
+          <v-list-item>
+            <v-container grid-list-xl>
+              <v-layout row justify-space-between>
+                <v-col align="center" cols="12" md10>
+                  <v-img width="120px" src="/logo-cplug-blue.png"></v-img>
+                  <span class="font-weight-black">QUALIDADE</span>
+                </v-col>
+              </v-layout>
+            </v-container>
+          </v-list-item>
+
+          <v-divider color="white"></v-divider>
+
+          <v-list dense>
+            <v-list-item :to="{ name: 'home' }">
+              <v-list-item-icon>
+                <v-icon>assignment</v-icon>
+              </v-list-item-icon>
+
+              <v-list-item-content>
+                <v-list-item-title>
+                  <span>Dashboard</span>
+                </v-list-item-title>
+              </v-list-item-content>
             </v-list-item>
+            <v-list-item
+              v-if="loggedUser.perfil == 'Administrador'"
+              :to="{ name: 'users' }"
+            >
+              <v-list-item-icon>
+                <v-icon>people_alt</v-icon>
+              </v-list-item-icon>
 
-            <v-divider color="white"></v-divider>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <span>Usuários</span>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
 
-            <v-list dense>
-              <v-list-item :to="{ name: 'home' }">
-                <v-list-item-icon>
-                  <v-icon>assignment</v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <span>Dashboard</span>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item :to="{ name: 'users' }">
-                <v-list-item-icon>
-                  <v-icon>people_alt</v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <span>Usuários</span>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-
-            <template v-slot:append>
+          <template v-slot:append>
+            <div>
+              <v-divider color="white"></v-divider>
               <div>
-                <v-divider color="white"></v-divider>
-                <v-switch
-                  class="ml-8"
-                  v-model="darkTheme"
-                  color="primary"
-                  inset
-                  label="Dark Mode"
-                ></v-switch>
+                
+              <v-switch
+       
+                class="ml-8"
+                v-model="darkTheme"
+                color="primary"
+                inset
+                label="Dark Mode"
+              ></v-switch>
               </div>
-            </template>
-          </v-navigation-drawer>
+            </div>
+          </template>
+        </v-navigation-drawer>
       </nav>
     </div>
 
     <v-content>
       <router-view></router-view>
     </v-content>
-    <v-footer dense :elevation="15" tile padless app="">
+    <v-footer :elevation="15" dense tile padless app="">
       <v-col class="text-center" cols="12">
         {{ new Date().getFullYear() }} — <strong>ConnectPlug</strong>
       </v-col>

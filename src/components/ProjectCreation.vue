@@ -1,4 +1,5 @@
 <template>
+ <!-- Ver porque os projetos estão ficando null ao dar refresh  -->
   <v-container fluid>
     <h3 class="font-weight-black">
       <v-icon left>assignment</v-icon>
@@ -68,7 +69,7 @@
     </v-row>
     <v-row>
       <v-col cols="12" sm="6" md="6">
-        <v-card>
+        <v-card outlined="" height="100%">
           <v-data-iterator
             :search="search"
             :items="projectsFiltered"
@@ -77,8 +78,8 @@
             hide-default-footer
           >
             <template v-slot:header>
-              <v-toolbar flat="" class="mb-2">
-                <v-toolbar-title class="title font-weight-regular mt-3">
+              <v-toolbar  class="mb-2">
+                <v-toolbar-title class="primary--text title font-weight-regular mt-3">
                   Filtro: {{ filter }}
                 </v-toolbar-title>
 
@@ -159,7 +160,6 @@
                   </v-hover>
                 </v-col>
               </v-row>
-              <v-divider color="black"></v-divider>
             </template>
           </v-data-iterator>
         </v-card>
@@ -186,8 +186,6 @@ import NewProject from "../components/NewProject";
 export default {
   created() {
     this.$store.dispatch("retrieveProjects");
-    console.log(this.projectsFiltered);
-    console.log(this.projects);
   },
   components: {
     NewProject

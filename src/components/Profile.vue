@@ -192,8 +192,9 @@
               @click="updateAuthUserPassword"
               color="success"
               class="mt-10"
+             
             >
-              <span>Salvar</span>
+              <span>Alterar</span>
             </v-btn>
           
               <v-slide-x-reverse-transition>

@@ -141,7 +141,6 @@
 <script>
 export default {
   created() {
-    console.log(this.users);
     this.$store.dispatch("retrieveUsers");
   },
   data: () => ({
@@ -249,7 +248,7 @@ export default {
                   this.close();
                   this.snackbar = true;
                   this.text = "Usuário Editado Com Sucesso";
-                  this.color = "primary";
+                  this.color = "blue";
                 }
               })
                .catch(err => {

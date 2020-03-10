@@ -34,6 +34,17 @@
           v-model="password"
         />
       </div>
+           <div class="form-control mb-more">
+        <label for="perfil">Perfil</label>
+        <input
+          type="text"
+          name="perfil"
+          id="perfil"
+          class="login-input"
+          v-model="perfil"
+        />
+      </div>
+
 
       <div class="form-control">
         <button type="submit" class="btn-submit">Create Account</button>
@@ -48,7 +59,8 @@ export default {
     return {
       name: "",
       email: "",
-      password: ""
+      password: "",
+      perfil: ""
     };
   },
   methods: {
@@ -57,7 +69,8 @@ export default {
         .dispatch("register", {
           name: this.name,
           email: this.email,
-          password: this.password
+          password: this.password,
+          perfil: this.perfil
         })
         .then(response => {
           this.$router.push({ name: "login" });

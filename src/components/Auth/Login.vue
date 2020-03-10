@@ -49,18 +49,20 @@
                   </div>
                   <v-text-field
                     v-model="username"
-                    label="Usuário"
+                    label="Email"
                     prepend-icon="mdi-account-circle"
                     :rules="loginRule"
                     counter
                   >
                   </v-text-field>
                   <v-text-field
+                    :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showPW ? 'text' : 'password'"
                     prepend-icon="mdi-lock"
                     v-model="password"
                     label="Senha"
-                    type="Password"
                     :rules="loginRule"
+                     @click:append="showPW = !showPW"
                     counter
                   ></v-text-field>
                 </v-col>
@@ -131,6 +133,7 @@ export default {
   },
   data() {
     return {
+      showPW: false,
       valid: true,
       username: "",
       password: "",
@@ -167,11 +170,12 @@ export default {
             })
             .then(response => {
               this.$store.dispatch("retrieveProjects");
+              this.$store.dispatch("retrieveUsers");
              
               if(response.status === 200)
               {
-                 console.log(this.$store.state.loggedUser)
-                 console.log(this.$store.state.projects)
+                //  console.log(this.$store.state.loggedUser)
+                //  console.log(this.$store.state.projects)
               this.loading = false;
               this.$router.push({ name: "home" });
               }

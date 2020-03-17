@@ -1,6 +1,4 @@
 <template>
-  
- 
     <v-container fluid align="center">
       <h1 class="subheading grey--text">Meus Projetos</h1>
 

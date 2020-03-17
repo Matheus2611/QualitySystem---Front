@@ -7,8 +7,22 @@
     </h3>
 
     <v-divider></v-divider>
-    <v-row>
-      <v-col cols="12" sm="12" md="12">
+    <v-row align="center" justify="center">
+
+      <v-snackbar
+      color="success"
+      multi-line
+      top
+      v-model="snackbar"
+      :timeout="timeout"
+    >
+      <span class="font-weight-bold">Projeto Criado Com Sucesso</span>
+      <v-btn text right color="white" @click="snackbar = false">
+        Fechar
+      </v-btn>
+    </v-snackbar>
+
+      <v-col cols="12" sm="11" md="11">
         <v-card outlined="" :elevation="1" max-width="100%" class="mx-auto">
           <v-row class="ma-2" align="center" justify="space-between">
             <v-fade-transition leave-absolute>
@@ -16,13 +30,13 @@
                 PROJETOS: {{ this.$store.state.projects.length }}
               </h1>
             </v-fade-transition>
-            <NewProject />
+            <NewProject @createSuccess="snackbar = true" />
           </v-row>
 
           <v-divider color="black"></v-divider>
 
           <v-row align="center">
-            <v-divider vertical color="black"></v-divider>
+            
             <v-btn
               color="warning"
               :class="{ active: filter == 'Em Andamento' }"
@@ -67,19 +81,19 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="12" sm="6" md="6">
-        <v-card outlined="" height="100%">
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="10" md="10">
+        <v-card  outlined="" height="100%">
           <v-data-iterator
             :search="search"
             :items="projectsFiltered"
             item-key="id"
             :items-per-page="projectsFiltered.length"
-            hide-default-footer
+  
           >
             <template v-slot:header>
               <v-toolbar  class="mb-2">
-                <v-toolbar-title class="primary--text title font-weight-regular mt-3">
+                <v-toolbar-title class="primary--text title font-weight-regular">
                   Filtro: {{ filter }}
                 </v-toolbar-title>
 
@@ -97,16 +111,18 @@
             </template>
 
             <template v-slot:default="{ items }">
-              <v-row class="pa-0">
+              <v-row justify="space-between" class="pa-2">
                 <v-col
                   v-for="item in items"
                   :key="item.id"
                   cols="12"
-                  sm="12"
-                  md="12"
+                  sm="6"
+                  md="6"
                 >
+           
                   <v-hover v-slot:default="{ hover }">
                     <v-card
+                    outlined=""
                       :to="{
                         name: 'project-name',
                         params: { id: item.id }
@@ -164,7 +180,7 @@
           </v-data-iterator>
         </v-card>
       </v-col>
-      <v-divider class="ml-5" vertical=""></v-divider>
+      <!-- <v-divider class="ml-5" vertical=""></v-divider>
 
       <v-col class="mx-auto align-center" cols="12" md="5" sm="5">
         <v-card max-height="100%" max-width="100%">
@@ -177,10 +193,13 @@
             Aqui vai a lista de atividades recentes de todos os projetos
           </v-card-title>
         </v-card>
-      </v-col>
+      </v-col> -->
     </v-row>
+    
   </v-container>
 </template>
+
+
 <script>
 import NewProject from "../components/NewProject";
 export default {
@@ -198,7 +217,9 @@ export default {
       items: [],
       completed: false,
       onGoing: true,
-      refused: false
+      refused: false,
+      snackbar: false,
+      timeout: 2500
     };
   },
   computed: {

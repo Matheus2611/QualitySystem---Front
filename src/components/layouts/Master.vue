@@ -3,7 +3,7 @@
     <div v-if="loggedIn == false"></div>
     <div v-else>
       <nav>
-        <v-app-bar class="primary" dense="" app="">
+        <v-app-bar  color="primary" dense="" app="">
           <v-app-bar-nav-icon
             class="white--text"
             @click.stop="drawer = !drawer"
@@ -15,16 +15,16 @@
           </v-toolbar-title> -->
 
           <v-spacer></v-spacer>
-          <div class="text-center">
-            <v-menu transition="slide-y-transition" offset-y>
+          <div class="text-center mr-1">
+            <v-menu  transition="slide-y-transition" offset-y>
               <template v-slot:activator="{ on }">
-                <v-btn dark="" text small v-on="on">
-                  <v-icon left="">account_circle</v-icon>
-                  <span class="font-weight-regular">{{ loggedUser.name }}</span>
+                <v-btn dark=""  text small v-on="on">
+                  <v-icon class="mb-0" left="">account_circle</v-icon>
+                  <span class="font-weight-bold">{{ loggedUser.name }}</span>
                   <v-icon right>expand_more</v-icon>
                 </v-btn>
               </template>
-              <v-list>
+              <v-list  class="mt-1" subheader="" tile=""  dense="">
                 <v-list-item :to="{ name: 'profile' }">
                         
                   <v-list-item-title class="font-weight-regular">
@@ -36,7 +36,7 @@
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item :to="{ name: 'logout' }">
-                <v-list-item-title>
+                <v-list-item-title class="font-weight-regular">
                   Logout
                 </v-list-item-title>
                  <v-list-item-avatar>
@@ -48,13 +48,14 @@
           </div>
         </v-app-bar>
         <v-navigation-drawer
+        color="grey darken-4"
           width="15%"
           app
+          dark
           temporary=""
-          bottom
           v-model="drawer"
         >
-          <v-list-item>
+          <v-list-item dark="">
             <v-container grid-list-xl>
               <v-layout row justify-space-between>
                 <v-col align="center" cols="12" md10>
@@ -67,7 +68,7 @@
 
           <v-divider color="white"></v-divider>
 
-          <v-list dense>
+          <v-list dark="" dense>
             <v-list-item :to="{ name: 'home' }">
               <v-list-item-icon>
                 <v-icon>assignment</v-icon>
@@ -80,7 +81,7 @@
               </v-list-item-content>
             </v-list-item>
             <v-list-item
-              v-if="loggedUser.perfil == 'Administrador'"
+
               :to="{ name: 'users' }"
             >
               <v-list-item-icon>
@@ -118,7 +119,7 @@
     <v-content>
       <router-view></router-view>
     </v-content>
-    <v-footer :elevation="15" dense tile padless app="">
+    <v-footer :elevation="15" dense tile padless >
       <v-col class="text-center" cols="12">
         {{ new Date().getFullYear() }} — <strong>ConnectPlug</strong>
       </v-col>
@@ -138,7 +139,8 @@ export default {
     return {
       darkTheme: localStorage.getItem("darkTheme"),
       initialDark: this.$vuetify ? this.$vuetify.theme.dark : true,
-      drawer: false
+      drawer: false,
+
     };
   },
   watch: {
@@ -156,14 +158,13 @@ export default {
     loggedIn() {
       return this.$store.getters.LoggedIn;
     },
-    loggedUser() {
-      return this.$store.state.loggedUser;
+    loggedUser(){
+      return this.$store.state.loggedUser
     }
   },
 
   beforeDestroy() {
     if (!this.$vuetify) return;
-
     this.$vuetify.theme.dark = this.initialDark;
   }
 };

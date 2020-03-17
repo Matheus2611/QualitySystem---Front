@@ -9,20 +9,21 @@
           class="mx-auto"
         >
           <v-form ref="form" v-model="valid" lazy-validation>
-            <v-toolbar class="primary" flat>
+            <v-toolbar color="primary" >
               <v-toolbar-title>
                 <v-img
-                  width="95px"
+                  width="90px"
                   class="mx-auto"
                   src="/logo-cplug-blue.png"
                 ></v-img>
               </v-toolbar-title>
               <v-spacer></v-spacer>
 
-              <h2 class="mt-2 headline text-center white--text font-italic">
+              <h2 class="mt-2 headline  text-center white--text font-regular">
                 Qualidade
               </h2>
             </v-toolbar>
+
 
             <v-layout row justify-space-between>
               <v-col align="center" cols="12" md10>
@@ -143,6 +144,7 @@ export default {
       timeout: 3000,
       snackbar: false,
       text: "",
+      loginSuccess: false,
       loginRule: [v => !!v || "Campos Obrigatórios"]
     };
   },
@@ -156,6 +158,10 @@ export default {
     resetForm() {
       this.$refs.form.reset();
     },
+    close(){
+      this.loading = false,
+      this.dataSuccess = false
+    },
     login() {
       if (this.$refs.form.validate()) {
         (this.show = true),
@@ -168,16 +174,17 @@ export default {
               username: this.username,
               password: this.password
             })
-            .then(response => {
-              this.$store.dispatch("retrieveProjects");
-              this.$store.dispatch("retrieveUsers");
-             
+            .then(response => {    
               if(response.status === 200)
-              {
-                //  console.log(this.$store.state.loggedUser)
-                //  console.log(this.$store.state.projects)
-              this.loading = false;
-              this.$router.push({ name: "home" });
+              { 
+                this.loginSuccess = true
+                console.log(response)
+                
+                this.close()        
+
+                this.$router.push({ name: "home", params: {
+                  dataSuccess: this.loginSuccess
+                } });
               }
             })
             .catch(err => {
@@ -187,7 +194,9 @@ export default {
                 this.text = "Usuário ou Senha inválidas...";
               }
             });
-        }, 500);
+     
+        }, 800);
+        
       } else {
         this.snackbar = true;
         this.text = "Campos Obrigatórios...";

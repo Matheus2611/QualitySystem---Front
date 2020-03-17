@@ -135,6 +135,7 @@
         </v-icon>
       </template>
     </v-data-table>
+    
   </v-container>
 </template>
 
@@ -143,6 +144,7 @@ export default {
   created() {
     this.$store.dispatch("retrieveUsers");
   },
+
   data: () => ({
     user: {},
     name: "",

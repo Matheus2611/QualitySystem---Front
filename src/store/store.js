@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import Axios from 'axios'
 
 Vue.use(Vuex)
-Axios.defaults.baseURL = 'http://192.168.0.173:8000/api'
+Axios.defaults.baseURL = 'http://localhost:8000/api'
 
 export const store = new Vuex.Store({
     state: {
@@ -12,7 +12,7 @@ export const store = new Vuex.Store({
         projects: [],
         userProjects: [],
         users: [],
-        loggedUser: JSON.parse(localStorage.getItem('loggedUser')) || null
+        loggedUser: JSON.parse(localStorage.getItem('loggedUser')) || null,
     },
     getters: {
         LoggedIn(state) {
@@ -110,18 +110,51 @@ export const store = new Vuex.Store({
         retrieveToken(state, token) {
             state.token = token
         },
-        loggedUser(state, user) {
-            state.loggedUser = user
-
+        loggedUser(state, loggedUser) {
+            state.loggedUser = loggedUser
         },
         destroyToken(state) {
             state.token = null
         },
         destroyUser(state) {
-            state.loggedUser = {}
+            state.loggedUser = null
         }
     },
     actions: {
+        test(tituloFluxo) {
+            console.log(tituloFluxo)
+        },
+        addTask(context, configs = {}) {
+            Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+            return new Promise((resolve, reject) => {
+                Axios.post('/tasks', configs)
+                    .then(response => {
+                        resolve(response)
+                    })
+                    .catch(error => {
+                        reject(error)
+                        console.log(error)
+                    })
+            })
+        },
+
+        addFlow(context, flow) {
+            Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+            return new Promise((resolve, reject) => {
+                Axios.post('/flows', {
+                        title: flow.title,
+                        status: 'Em Andamento',
+                    })
+                    .then(response => {
+                        resolve(response)
+
+                    })
+                    .catch(err => {
+                        reject(err)
+                        console.log(err)
+                    })
+            })
+        },
         retrieveUsers(context) {
             Axios.get('/users')
                 .then(response => {
@@ -211,9 +244,22 @@ export const store = new Vuex.Store({
                 })
             }
         },
+        // retrieveLoggedUser(context) {
+        //     Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+        //     return new Promise((resolve, reject) => {
+        //         Axios.get('/user')
+        //             .then(response => {
+
+        //                 resolve(response)
+        //             })
+        //             .catch(err => {
+        //                 console.log(err)
+        //                 reject(err)
+        //             })
+        //     })
+        // },
         retrieveToken(context, credentials) {
             return new Promise((resolve, reject) => {
-
                 Axios.post('/login', {
                         username: credentials.username,
                         password: credentials.password
@@ -221,8 +267,6 @@ export const store = new Vuex.Store({
                     .then(response => {
                         const token = response.data.access_token
                         localStorage.setItem('access_token', token)
-                        context.commit('retrieveToken', token)
-                        resolve(response)
                         Axios.get('/user', {
                                 headers: {
                                     Authorization: 'Bearer ' + token,
@@ -230,11 +274,10 @@ export const store = new Vuex.Store({
                                 }
                             })
                             .then(resp => {
-                                context.commit('loggedUser', resp.data)
                                 localStorage.setItem('loggedUser', JSON.stringify(resp.data));
-                            })
-                            .catch(err => {
-                                console.log(err)
+                                context.commit('loggedUser', resp.data)
+                                context.commit('retrieveToken', token)
+                                resolve(response)
                             })
                     })
                     .catch(err => {
@@ -247,7 +290,6 @@ export const store = new Vuex.Store({
             context.commit('updateFilter', filter)
         },
         addProject(context, project) {
-            console.log(project.user_id)
             Axios.post('/projects', {
                     title: project.title,
                     completed: false,
@@ -300,7 +342,6 @@ export const store = new Vuex.Store({
             Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
             Axios.get('/userProject')
                 .then(response => {
-                    console.log(response)
                     context.commit('retrieveUserProject', response.data)
                 })
                 .catch(error => {

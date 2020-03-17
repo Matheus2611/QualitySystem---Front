@@ -1,11 +1,29 @@
 <template>
+<div>
 
-<div class="home">
-  <div v-if="loggedUser.perfil == 'Administrador'">
+   <v-snackbar
+      color="success"
+      multi-line
+      top
+      v-model="snackbar"
+      :timeout="timeout"
+    >
+      <span class="font-weight-regular">Bem vindo {{loggedUser.name}}</span>
+      <v-btn text right color="white" @click="snackbar = false">
+        Fechar
+      </v-btn>
+    </v-snackbar>
+
+    <div v-if="loggedUser.perfil == 'Administrador'">
+
     <ProjectCreation/>
+
     </div>
+
     <div v-else>
+
         <UserProjects/>
+        
     </div>
 </div>
  
@@ -16,20 +34,27 @@ import ProjectCreation from "@/components/ProjectCreation";
 import UserProjects from "@/components/UserProject";
 export default {
   created() {
-    this.$store.dispatch("retrieveProjects");
-    this.$store.dispatch('retrieveUserProject')
-    
+      this.$store.dispatch("retrieveProjects");
+      this.$store.dispatch('retrieveUserProject')
   },
-  
-  components: {ProjectCreation, UserProjects},
+  props: {
+    dataSuccess: {
+      type: Boolean
+    }
+  },
+  components: {
+    ProjectCreation, 
+    UserProjects
+  },
   data(){
     return {
-       
+      timeout: 3000,
+      snackbar: this.dataSuccess
     }
   },
   computed: {
-    loggedUser() {
-      return this.$store.state.loggedUser;
+    loggedUser(){
+      return this.$store.state.loggedUser
     }
   }
 }

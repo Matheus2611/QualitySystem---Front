@@ -1,6 +1,7 @@
 <template>
   <v-container fluid>
 
+
     <h3 class="font-weight-black">
       <v-icon  left>face</v-icon>
       <span>Meu Perfil</span>
@@ -211,7 +212,7 @@
           </v-form>
         </v-col>
       </v-row>
-   
+
   </v-container>
 </template>
 
@@ -221,7 +222,6 @@ export default {
 
   data() {
     return {
-      loggedUser: JSON.parse(localStorage.getItem('loggedUser')),
       disabled: true,
       valid: null,
       show1: false,
@@ -243,10 +243,14 @@ export default {
       ]
     };
   },
+  computed: {
+    loggedUser(){
+      return this.$store.state.loggedUser
+    }
+  },
   methods: {
     updateAuthUserPassword() {
 
-      
       if (this.$refs.form.validate()) {
           this.$store.dispatch('updateAuthUserPassword', {
             current: this.password.current,

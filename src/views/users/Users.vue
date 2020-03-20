@@ -67,11 +67,11 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="blue darken-1" dark class="mb-2" v-on="on"
+              <v-btn color="blue darken-1" @click="resetForm" dark class="mb-2" v-on="on"
                 >Novo Usuário</v-btn
               >
             </template>
-            <v-card>
+            <v-card :loading="loading">
               <v-card-title>
                 <span class="headline primary--text">{{ formTitle }}</span>
               </v-card-title>
@@ -152,10 +152,11 @@ export default {
     password: "",
     dialog: false,
     dialogDelete: false,
+    loading: false,
     search: "",
     text: "",
     color: "",
-    valid: true,
+    valid: false,
     snackbar: false,
     timeout: 3000,
     items: ["Administrador", "Analista Senior", "Analista"],
@@ -204,7 +205,7 @@ export default {
 
   methods: {
     resetForm() {
-      this.$refs.form.reset();
+      this.$refs.form.resetValidation();
     },
     editItem(item) {
       this.editedIndex = this.users.indexOf(item);
@@ -226,16 +227,17 @@ export default {
     },
 
     close() {
+      this.loading = false
       this.dialog = false;
       this.$refs.form.reset();
       setTimeout(() => {
-        this.$store.dispatch("retrieveUsers");
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
-      }, 600);
+      }, 400);
     },
     save() {
       if (this.$refs.form.validate()) {
+        this.loading = true
         if (this.editedIndex > -1) {
           setTimeout(() => {
             this.$store
@@ -250,7 +252,7 @@ export default {
                   this.close();
                   this.snackbar = true;
                   this.text = "Usuário Editado Com Sucesso";
-                  this.color = "blue";
+                  this.color = "success";
                 }
               })
                .catch(err => {
@@ -258,6 +260,7 @@ export default {
                   this.snackbar = true;
                   this.text = "Email já está sendo utilizado";
                   this.color = "warning";
+                  this.loading = false
                 }
               });
           }, 600)
@@ -283,12 +286,11 @@ export default {
                   this.snackbar = true;
                   this.text = "Email já está sendo utilizado";
                   this.color = "warning";
+                  this.loading = false
                 }
               });
           }, 600);
-        }
-
-      
+        }    
       }
     }
   }

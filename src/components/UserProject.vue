@@ -1,21 +1,6 @@
 <template>
     <v-container fluid="">
-        <v-row align="center" justify="center">
-            <v-col 
-            v-for="myProjects in userProjects"
-            :key="myProjects.id"
-            cols="12" 
-            sm="12"
-            md="12"
-            >
-                <v-card outlined="">
-                 
-
-                    <v-card-title>{{myProjects.title}}</v-card-title>
-                    <v-card-subtitle>{{myProjects.description}}</v-card-subtitle>
-                </v-card>
-            </v-col>
-        </v-row>
+    
     </v-container>
         
     
@@ -23,11 +8,29 @@
 
 <script>
 export default {
-
-    computed: {
-        userProjects(){    
-            return this.$store.state.userProjects
-        }
+    created()
+    {
+        this.$store.dispatch('retrieveFlows')
+        // .then(response => {
+        //     response.data.forEach(element => {
+        //         this.flows.push({
+        //             id: element.id,
+        //             flowTitle: element.title,
+        //             status: element.status
+        //         })
+        //         this.tasks.push(element.tasks)
+        //     });
+        // }) 
+        
+        // console.log(this.tasks)
     },
+
+    data() {
+        return {
+            flows: [],
+            tasks: []
+        }
+    }
+   
 }
 </script>

@@ -50,13 +50,9 @@ export const store = new Vuex.Store({
         },
         addProject(state, project) {
             state.projects.push({
-                    id: project.id,
                     title: project.title,
                     description: project.description,
-                    completed: false,
                     status: 'Em Andamento',
-                    user_id: project.user_id
-
                 }
 
             )
@@ -121,40 +117,6 @@ export const store = new Vuex.Store({
         }
     },
     actions: {
-        test(tituloFluxo) {
-            console.log(tituloFluxo)
-        },
-        addTask(context, configs = {}) {
-            Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
-            return new Promise((resolve, reject) => {
-                Axios.post('/tasks', configs)
-                    .then(response => {
-                        resolve(response)
-                    })
-                    .catch(error => {
-                        reject(error)
-                        console.log(error)
-                    })
-            })
-        },
-
-        addFlow(context, flow) {
-            Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
-            return new Promise((resolve, reject) => {
-                Axios.post('/flows', {
-                        title: flow.title,
-                        status: 'Em Andamento',
-                    })
-                    .then(response => {
-                        resolve(response)
-
-                    })
-                    .catch(err => {
-                        reject(err)
-                        console.log(err)
-                    })
-            })
-        },
         retrieveUsers(context) {
             Axios.get('/users')
                 .then(response => {
@@ -244,20 +206,6 @@ export const store = new Vuex.Store({
                 })
             }
         },
-        // retrieveLoggedUser(context) {
-        //     Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
-        //     return new Promise((resolve, reject) => {
-        //         Axios.get('/user')
-        //             .then(response => {
-
-        //                 resolve(response)
-        //             })
-        //             .catch(err => {
-        //                 console.log(err)
-        //                 reject(err)
-        //             })
-        //     })
-        // },
         retrieveToken(context, credentials) {
             return new Promise((resolve, reject) => {
                 Axios.post('/login', {
@@ -289,21 +237,38 @@ export const store = new Vuex.Store({
         updateFilter(context, filter) {
             context.commit('updateFilter', filter)
         },
-        addProject(context, project) {
-            Axios.post('/projects', {
-                    title: project.title,
-                    completed: false,
-                    description: project.description,
-                    status: 'Em Andamento',
-                    user_id: project.user_id
-                })
-                .then(response => {
-                    context.commit('addProject', response.data)
+        createFlow(context, configs = {}) {
+            Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+            return new Promise((resolve, reject) => {
+                Axios.post('/flows', configs)
+                    .then(response => {
+                        resolve(response)
+                        console.log(response)
 
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                    })
+                    .catch(err => {
+                        reject(err)
+                        console.log(err)
+                    })
+            })
+        },
+        addProject(context, project) {
+            return new Promise((resolve, reject) => {
+                Axios.post('/projects', {
+                        title: project.title,
+                        description: project.description,
+                        status: 'Em Andamento',
+                    })
+                    .then(response => {
+                        // context.commit('addProject', response.data)
+                        resolve(response)
+
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        reject(err)
+                    })
+            })
         },
         updateProject(context, project) {
             Axios.patch('/projects/' + project.id, {
@@ -338,15 +303,21 @@ export const store = new Vuex.Store({
                     console.log(error)
                 })
         },
-        retrieveUserProject(context) {
+        retrieveFlows(context) {
             Axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
-            Axios.get('/userProject')
-                .then(response => {
-                    context.commit('retrieveUserProject', response.data)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        }
+            return new Promise((resolve, reject) => {
+
+                Axios.get('/userstasks')
+                    .then(response => {
+                        console.log(response)
+                        resolve(response)
+
+                    })
+                    .catch(error => {
+                        reject(error)
+                        console.log(error)
+                    })
+            })
+        },
     }
 })

@@ -3,7 +3,7 @@
     <div v-if="loggedIn == false"></div>
     <div v-else>
       <nav>
-        <v-app-bar  color="primary" dense="" app="">
+        <v-app-bar color="primary" dense="" app="">
           <v-app-bar-nav-icon
             class="white--text"
             @click.stop="drawer = !drawer"
@@ -16,59 +16,67 @@
 
           <v-spacer></v-spacer>
           <div class="text-center mr-1">
-            <v-menu  transition="slide-y-transition" offset-y>
+            <v-menu transition="slide-y-transition" offset-y>
+
               <template v-slot:activator="{ on }">
-                <v-btn dark=""  text small v-on="on">
+                <v-btn dark="" text small v-on="on">
                   <v-icon class="mb-0" left="">account_circle</v-icon>
                   <span class="font-weight-bold">{{ loggedUser.name }}</span>
                   <v-icon right>expand_more</v-icon>
                 </v-btn>
               </template>
-              <v-list  class="mt-1" subheader="" tile=""  dense="">
+
+              <v-list class="mt-1" subheader="" tile="" dense="">
                 <v-list-item :to="{ name: 'profile' }">
-                        
                   <v-list-item-title class="font-weight-regular">
                     Meu Perfil
                   </v-list-item-title>
-            <v-list-item-avatar>
+                  <v-list-item-avatar>
                     <v-icon>face</v-icon>
                   </v-list-item-avatar>
                 </v-list-item>
+
                 <v-divider></v-divider>
+
                 <v-list-item :to="{ name: 'logout' }">
-                <v-list-item-title class="font-weight-regular">
-                  Logout
-                </v-list-item-title>
-                 <v-list-item-avatar>
+                  <v-list-item-title class="font-weight-regular">
+                    Logout
+                  </v-list-item-title>
+                  <v-list-item-avatar>
                     <v-icon>input</v-icon>
                   </v-list-item-avatar>
                 </v-list-item>
               </v-list>
+
             </v-menu>
           </div>
         </v-app-bar>
+
+
+
         <v-navigation-drawer
-        color="grey darken-4"
-          width="15%"
+          width="14%"
           app
-          dark
-          temporary=""
+          expand-on-hover=""
           v-model="drawer"
         >
-          <v-list-item dark="">
-            <v-container grid-list-xl>
-              <v-layout row justify-space-between>
-                <v-col align="center" cols="12" md10>
-                  <v-img width="120px" src="/logo-cplug-blue.png"></v-img>
-                  <span class="font-weight-black">QUALIDADE</span>
-                </v-col>
-              </v-layout>
-            </v-container>
-          </v-list-item>
+          <v-list class="mt-3" dense="">
+         
+              <v-img
+               class="ml-3"
+                max-width="70%"
+                src="/logo-cplug-blue.png"
+              ></v-img>
+        
+            <v-list-item>
+              <v-list-item-title>
+                SETOR DE QUALIDADE
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+          <v-divider color="black"></v-divider>
 
-          <v-divider color="white"></v-divider>
-
-          <v-list dark="" dense>
+          <v-list dense>
             <v-list-item :to="{ name: 'home' }">
               <v-list-item-icon>
                 <v-icon>assignment</v-icon>
@@ -80,10 +88,7 @@
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item
-
-              :to="{ name: 'users' }"
-            >
+            <v-list-item :to="{ name: 'users' }">
               <v-list-item-icon>
                 <v-icon>people_alt</v-icon>
               </v-list-item-icon>
@@ -98,17 +103,15 @@
 
           <template v-slot:append>
             <div>
-              <v-divider color="white"></v-divider>
+              <v-divider color="black"></v-divider>
               <div>
-                
-              <v-switch
-       
-                class="ml-8"
-                v-model="darkTheme"
-                color="primary"
-                inset
-                label="Dark Mode"
-              ></v-switch>
+                <v-switch
+                  class="ml-6"
+                  v-model="darkTheme"
+                  color="primary"
+                  inset
+                  label="Dark Mode"
+                ></v-switch>
               </div>
             </div>
           </template>
@@ -119,7 +122,7 @@
     <v-content>
       <router-view></router-view>
     </v-content>
-    <v-footer :elevation="15" dense tile padless >
+    <v-footer :elevation="15" dense tile padless>
       <v-col class="text-center" cols="12">
         {{ new Date().getFullYear() }} — <strong>ConnectPlug</strong>
       </v-col>
@@ -139,8 +142,7 @@ export default {
     return {
       darkTheme: localStorage.getItem("darkTheme"),
       initialDark: this.$vuetify ? this.$vuetify.theme.dark : true,
-      drawer: false,
-
+      drawer: false
     };
   },
   watch: {
@@ -158,8 +160,8 @@ export default {
     loggedIn() {
       return this.$store.getters.LoggedIn;
     },
-    loggedUser(){
-      return this.$store.state.loggedUser
+    loggedUser() {
+      return this.$store.state.loggedUser;
     }
   },
 

@@ -35,7 +35,7 @@ import UserProjects from "@/components/UserProject";
 export default {
   created() {
       this.$store.dispatch("retrieveProjects");
-      this.$store.dispatch('retrieveUserProject')
+
   },
   props: {
     dataSuccess: {

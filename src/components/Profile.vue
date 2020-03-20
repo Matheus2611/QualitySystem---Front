@@ -24,7 +24,7 @@
         Fechar
       </v-btn>
     </v-snackbar>
-        <v-col align="center" cols="12" md="7">
+        <v-col class="mt-8" align="center" cols="12" md="7">
          
       <v-hover
         v-slot:default="{ hover }"
@@ -33,7 +33,7 @@
           <v-card
             outlined=""
             :elevation="hover ? 15 : 0"
-            class="mx-auto mb-10"
+            class="mx-auto mb-5"
             max-width="65%"
           >
             <div class="pa-1">
@@ -134,15 +134,19 @@
           </v-card>
       </v-hover>
         </v-col>
-        <v-col align="center" class="mt-9" cols="12" md="4">
-          <div>
-            <v-btn class="mb-3" text @click="disabled = !disabled">
+        <v-col align="center" class="mb-3"  cols="12" md="4">
+      
+            <v-btn class="mb-3" text @click="reset">
               <v-icon left>
                 lock
               </v-icon>
               <span class="font-weight-bold">ALTERAR SENHA</span>
             </v-btn>
-          </div>
+            
+            
+             
+
+      
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
               prepend-icon="lock"
@@ -175,7 +179,7 @@
               prepend-icon="lock"
               v-model="password.password_confirmation"
               :append-icon="show3 ? 'mdi-eye' : 'mdi-eye-off'"
-              :rules="passwordRules"
+              :rules="confirmPasswordRules"
               :type="show3 ? 'text' : 'password'"
               required
               label="Confirmar Nova Senha"
@@ -188,26 +192,17 @@
             ></v-text-field>
               <div class="d-flex justify-center">
             <v-btn
-           
-             :disabled="disabled"
+              :disabled="valid == false"
+              v-show="disabled == false"
               @click="updateAuthUserPassword"
               color="success"
               class="mt-10"
              
             >
               <span>Alterar</span>
+           
             </v-btn>
-          
-              <v-slide-x-reverse-transition>
-                <v-tooltip v-if="valid == false" right>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon class="mt-10" @click="resetForm" v-on="on">
-                      <v-icon>mdi-refresh</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Resetar Senhas</span>
-                </v-tooltip>
-              </v-slide-x-reverse-transition>
+
            </div>
           </v-form>
         </v-col>
@@ -223,7 +218,7 @@ export default {
   data() {
     return {
       disabled: true,
-      valid: null,
+      valid: false,
       show1: false,
       show2: false,
       show3: false,
@@ -236,9 +231,12 @@ export default {
       show: true,
       dialog: false,
       imageUrl: "",
-      passwordRules: [
-       
+      passwordRules: [     
         v => !!v || "Campo Obrigatório",
+        v => (v && v.length >= 6) || "Mínimo de 6 Caracteres",
+      ],
+      confirmPasswordRules: [
+        v => (!!v && v) === this.password.password || 'Senhas Não Conferem',
         v => (v && v.length >= 6) || "Mínimo de 6 Caracteres"
       ]
     };
@@ -282,7 +280,8 @@ export default {
           })
       }
     },
-    resetForm() {
+    reset() {
+      this.disabled = !this.disabled
       this.$refs.form.reset();
     },
     onFileChange() {

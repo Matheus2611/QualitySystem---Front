@@ -163,13 +163,27 @@ export default {
       this.dataSuccess = false
     },
     login() {
+
       if (this.$refs.form.validate()) {
         (this.show = true),
-          (this.loading = true),
-          (this.message = "Logando...");
+        (this.loading = true),
+        (this.message = "Logando...");
 
         setTimeout(() => {
-          this.$store
+
+        if(this.username == "matheus" && this.password == 123){
+                
+            this.loginSuccess = true
+       
+                
+            this.close()        
+
+            this.$router.push({ name: "home", params: {
+              dataSuccess: this.loginSuccess
+            } });
+        }
+          
+       /*   this.$store
             .dispatch("retrieveToken", {
               username: this.username,
               password: this.password
@@ -194,6 +208,8 @@ export default {
                 this.text = "Usuário ou Senha inválidas...";
               }
             });
+
+            */
      
         }, 800);
         

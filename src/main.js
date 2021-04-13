@@ -9,27 +9,6 @@ import Master from './components/layouts/Master.vue'
 
 Vue.config.productionTip = false
 
-router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!store.getters.LoggedIn) {
-            next({
-                name: 'login',
-            })
-        } else {
-            next()
-        }
-    } else if (to.matched.some(record => record.meta.requiresVisitor)) {
-        if (store.getters.LoggedIn) {
-            next({
-                name: 'home',
-            })
-        } else {
-            next()
-        }
-    } else {
-        next()
-    }
-})
 
 new Vue({
     store,

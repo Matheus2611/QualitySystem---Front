@@ -11,19 +11,7 @@
 
     
       <v-row align="center">
-          <v-snackbar
-      multi-line
-      top
-      :color="color"
-      v-model="snackbar"
-      :timeout="timeout"
-    >
-      {{ text }}
-
-      <v-btn text right color="white" @click="snackbar = false">
-        Fechar
-      </v-btn>
-    </v-snackbar>
+      
         <v-col class="mt-8" align="center" cols="12" md="7">
          
       <v-hover
@@ -51,7 +39,6 @@
               <v-text-field
                 prepend-icon="assignment_ind"
                 label="Meu Nome"
-                v-model="loggedUser.name"
                 class="pa-4"
                 readonly
               ></v-text-field>
@@ -59,14 +46,12 @@
                 label="Meu Email"
                 prepend-icon="email"
                 class="pa-4"
-                v-model="loggedUser.email"
                 readonly
               ></v-text-field>
               <v-text-field
                 label="Perfil"
                 class="pa-4"
                 prepend-icon="account_box"
-                v-model="loggedUser.perfil"
                 readonly
               ></v-text-field>
             </v-col>
@@ -242,44 +227,9 @@ export default {
     };
   },
   computed: {
-    loggedUser(){
-      return this.$store.state.loggedUser
-    }
   },
   methods: {
-    updateAuthUserPassword() {
-
-      if (this.$refs.form.validate()) {
-          this.$store.dispatch('updateAuthUserPassword', {
-            current: this.password.current,
-            password: this.password.password,
-            password_confirmation: this.password.password_confirmation,
-          })
-          .then(response => {
-            if(response.status === 200){
-              this.$refs.form.reset();
-              this.disabled = true
-              this.password = {},
-              this.snackbar = true,
-              this.text = 'Senha Alterada Com Sucesso',
-              this.color = 'success'
-            }
-                   
-          })
-          .catch(error => {
-              if(error.response.status === 403){
-              this.snackbar = true,
-              this.text = 'Senha Atual Não Confere...',
-              this.color = 'error'
-            }
-              if(error.response.status === 422){
-              this.snackbar = true,
-              this.text = 'Novas Senhas Não São Iguais...',
-              this.color = 'warning'
-            }             
-          })
-      }
-    },
+  
     reset() {
       this.disabled = !this.disabled
       this.$refs.form.reset();

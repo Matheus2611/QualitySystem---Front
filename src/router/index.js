@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Users from '../views/users/Users.vue'
 import Profile from '../components/Profile.vue'
-import ProjectName from '../views/ProjectName.vue'
 import Home from '../views/Home.vue'
 import Login from '../components/Auth/Login.vue'
 import Register from '../components/Auth/Register.vue'
 import Logout from '../components/Auth/Logout.vue'
+import Productsidea from '../views/Productsidea.vue'
+import MenuCreate from '../views/MenuCreate.vue'
+
 
 
 
@@ -16,68 +17,44 @@ Vue.use(VueRouter)
 const routes = [{
         path: '/',
         component: Home,
-        meta: {
-            requiresAuth: true
-        }
     },
     {
         path: '/Home',
         name: 'home',
         component: Home,
         props: true,
-        meta: {
-            requiresAuth: true
-        }
+    },
+    {
+        path: '/Menu/Create',
+        name: 'menucreate',
+        component: MenuCreate,
+        props: true,
+    },
+    {
+        path: '/Productsidea',
+        name: 'productsidea',
+        component: Productsidea,
+        props: true,
     },
     {
         path: '/Profile',
         name: 'profile',
         component: Profile,
-        meta: {
-            requiresAuth: true
-        }
     },
     {
         path: '/Login',
         name: 'login',
         component: Login,
-        meta: {
-            requiresVisitor: true
-        }
     },
     {
         path: '/logout',
         name: 'logout',
         component: Logout,
-        meta: {
-            requiresAuth: true
-        }
     },
     {
         path: '/register',
         name: 'register',
         component: Register,
-        meta: {
-            requiresVisitor: true
-        }
-    },
-    {
-        path: '/Projects/:id',
-        name: 'project-name',
-        component: ProjectName,
-        params: true,
-        meta: {
-            requiresAuth: true
-        }
-    },
-    {
-        path: '/Users',
-        name: 'users',
-        component: Users,
-        meta: {
-            requiresAuth: true
-        }
-
     },
 
 ]
